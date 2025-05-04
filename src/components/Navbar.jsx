@@ -33,7 +33,7 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder="Search"
-                className="w-full rounded-s-lg p-[12px] border-none transition-all duration-300"
+                className="w-full rounded-s-lg border-none p-[12px] transition-all duration-300"
               />
 
               <Link to={"/search"}>
@@ -49,7 +49,7 @@ export default function Navbar() {
               </Link>
             </div>
 
-            <Link className="text-blue w-[10%] items-center py-3 text-center text-xl">
+            <Link className="text-blue mx-2 w-[10%] items-center py-3 text-center text-xl sm:max-md:w-[20%]">
               Log out
             </Link>
           </div>

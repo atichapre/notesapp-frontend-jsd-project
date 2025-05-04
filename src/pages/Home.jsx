@@ -1,12 +1,419 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import PopoverInput from "../components/PopOverInput";
+import labelIcon from "../assets/label-outline.svg";
+import TagInputMobile from "../components/AddTagsMobile";
+
 export default function Home() {
+  const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState([]);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+  const [editingNoteId, setEditingNoteId] = useState(null);
+  const [isFullScreenFormOpen, setIsFullScreenFormOpen] = useState(false);
+
+  const token = localStorage.getItem("token");
+
+  const getNotes = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const response = await axios.get("http://localhost:3010/notes", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      console.log("Fetched notes:", response.data);
+      setNotes(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error(
+        "Error fetching notes:",
+        error.response?.data || error.message,
+      );
+    }
+  };
+
+  useEffect(() => {
+    getNotes();
+  }, []);
+
+  const createNote = async () => {
+    try {
+      console.log("Creating note with:", {
+        title,
+        content,
+        isPinned,
+        tags,
+      });
+      await axios.post(
+        "http://localhost:3010/notes",
+        { title, content, isPinned, tags },
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        },
+      );
+
+      setTitle("");
+      setContent("");
+      setIsPinned(false);
+      setTags([]);
+      setEditingNoteId(null);
+      await getNotes();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteNote = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3010/notes/${id}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      console.log(notes);
+      await getNotes();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEdit = (note) => {
+    setEditingNoteId(note._id);
+    setTitle(note.title);
+    setContent(note.content);
+    setTags(note.tags.flat());
+    setIsPinned(note.isPinned);
+    setIsFullScreenFormOpen(true);
+  };
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const saveEditedNote = async () => {
+    if (!editingNoteId) return;
+
+    try {
+      console.log("Saving edited note with:", {
+        title,
+        content,
+        isPinned,
+        tags,
+      });
+      await axios.put(
+        `http://localhost:3010/notes/${editingNoteId}`,
+        { title, content, isPinned, tags },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        },
+      );
+      setEditingNoteId(null);
+      setTitle("");
+      setTags([]);
+      setContent("");
+      await getNotes();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const deleteTag = (tag) => {
+    setTags(tags.filter((t) => t !== tag));
+  };
+
+  const showNoteTags = (tagsArray, onDeleteTag) =>
+    (tagsArray || []).map((tag, index) => (
+      <span
+        key={`${tag}-${index}`}
+        className="mr-[8px] rounded-sm bg-yellow-200 px-[8px]"
+      >
+        {tag}
+        {onDeleteTag && (
+          <span
+            onClick={() => onDeleteTag(tag)}
+            className="ml-1 cursor-pointer text-sm"
+          >
+            ×
+          </span>
+        )}
+      </span>
+    ));
+
+  const togglePinned = async (noteId, currentPinned) => {
+    try {
+      await axios.patch(
+        `http://localhost:3010/notes/${noteId}`,
+        {
+          isPinned: !currentPinned, // Toggle the pinned status
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      // Refresh the note list after update
+      await getNotes();
+    } catch (error) {
+      console.error(
+        "Error toggling pinned status:",
+        error.response?.data || error.message,
+      );
+    }
+  };
+
+  const limitContentLength = (content) => {
+    const words = content.split(/\s+/);
+    if (words.length <= 20) {
+      return content;
+    }
+    return words.slice(0, 20).join(" ") + "...";
+  };
+
   return (
     <main>
       <div className="container__div">
-        <div className="flex flex-col w-[50%] justify-self-center">
-      <p>Take a note</p>
-      <textarea id="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-white focus:ring-0 dark:text-gray dark:placeholder-gray-400" placeholder="Write a comment..." required ></textarea>
+        <div className="flex flex-row sm:max-md:flex-col">
+          {/* Note Sidebar */}
+          <div className="flex w-[25%] flex-col sm:max-md:w-full">
+            <button
+              className="m-5 rounded-md bg-[#6f61f2] p-2 text-white sm:max-md:hidden"
+              onClick={() => {
+                if (editingNoteId) {
+                  saveEditedNote();
+                } else {
+                  createNote();
+                }
+              }}
+            >
+              {editingNoteId ? "Save" : "Add Note"}
+            </button>
+            {editingNoteId ? (
+              <button
+                className="m-5 rounded-md bg-[#6f5555] p-2 text-white sm:max-md:hidden"
+                onClick={() => {
+                  setEditingNoteId(null);
+                  setTitle("");
+                  setContent("");
+                  setTags([]);
+                }}
+              >
+                Undo
+              </button>
+            ) : null}
+            <div>
+              {[...notes]
+                .sort((a, b) => (b.isPinned === true) - (a.isPinned === true))
+                .map((note) => (
+                  <div key={note._id} className="border-b p-2">
+                    <div className="flex justify-between">
+                      <h2>{note.title}</h2>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        id="Pin-1--Streamline-Sharp"
+                        height="20"
+                        width="20"
+                      >
+                        <path
+                          id="Union"
+                          className="text-blue-800"
+                          fill={note.isPinned ? "currentColor" : "#d5d7de"}
+                          fillRule="evenodd"
+                          d="m23 9 -8 -8 -3 5 -9.00005 4 4.7929 4.7929 -6.5 6.5 1.41421 1.4142 6.5 -6.5L14 21l4 -9 5 -3Z"
+                          clipRule="evenodd"
+                          strokeWidth="1"
+                          onClick={() => togglePinned(note._id)}
+                        ></path>
+                      </svg>
+                    </div>
+                    <p className="h-40 w-full text-sm">
+                      {limitContentLength(note.content)}
+                    </p>
+                    <p className>{showNoteTags(note.tags)}</p>
+                    <div className="flex justify-between">
+                      <button onClick={() => deleteNote(note._id)}>
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleEdit(note);
+                          handleScrollToTop();
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+          {/* Note Form */}
+          <div className="flex w-[75%] px-5">
+            <div className="flex w-full flex-col sm:max-md:hidden">
+              <p className="my-5 text-2xl">{showNoteTags(tags, deleteTag)}</p>
+              <div className="flex justify-between">
+                <input
+                  className="w-[95%] py-4 text-4xl"
+                  type="text"
+                  value={title}
+                  placeholder="Enter a title..."
+                  onChange={(e) => setTitle(e.target.value)}
+                ></input>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  id="Pin-1--Streamline-Sharp"
+                  height="40"
+                  width="40"
+                >
+                  <path
+                    id="Union"
+                    className="text-blue-800"
+                    fill={isPinned ? "currentColor" : "#d5d7de"}
+                    fill-rule="evenodd"
+                    d="m23 9 -8 -8 -3 5 -9.00005 4 4.7929 4.7929 -6.5 6.5 1.41421 1.4142 6.5 -6.5L14 21l4 -9 5 -3Z"
+                    clip-rule="evenodd"
+                    stroke-width="1"
+                    onClick={() => setIsPinned(!isPinned)}
+                  ></path>
+                </svg>
+                <img
+                  src={labelIcon}
+                  className="h-10 w-10 hover:cursor-pointer"
+                  onClick={() => {
+                    setIsPopoverOpen(!isPopoverOpen);
+                  }}
+                ></img>
               </div>
+              <textarea
+                className="min-h-screen text-xl"
+                placeholder="Take Note..."
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
+          <PopoverInput
+            isOpen={isPopoverOpen}
+            setIsOpen={setIsPopoverOpen}
+            onSubmitTag={(newTag) =>
+              setTags((prev) => [
+                ...prev,
+                ...(Array.isArray(newTag) ? newTag.map(String) : [newTag]),
+              ])
+            }
+          />
+        </div>
+        {isFullScreenFormOpen && (
+          <div className="fixed inset-0 z-50 overflow-auto bg-white p-10 min-lg:hidden">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-2xl font-bold">
+                {editingNoteId ? "Edit Note" : "Add Note"}
+              </h2>
+              <button
+                className="text-xl text-red-500 min-lg:hidden"
+                onClick={() => setIsFullScreenFormOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex w-full flex-col lg:hidden">
+              <p className="mt-10 h-full text-2xl">
+                {showNoteTags(tags, deleteTag)}
+              </p>
+
+              <div className="flex justify-between">
+                <input
+                  className="w-[95%] py-4 text-4xl"
+                  type="text"
+                  value={title}
+                  placeholder="Enter a title..."
+                  onChange={(e) => setTitle(e.target.value)}
+                ></input>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  id="Pin-1--Streamline-Sharp"
+                  height="40"
+                  width="40"
+                >
+                  <path
+                    id="Union"
+                    className="text-blue-800"
+                    fill={isPinned ? "currentColor" : "#d5d7de"}
+                    fill-rule="evenodd"
+                    d="m23 9 -8 -8 -3 5 -9.00005 4 4.7929 4.7929 -6.5 6.5 1.41421 1.4142 6.5 -6.5L14 21l4 -9 5 -3Z"
+                    clip-rule="evenodd"
+                    stroke-width="1"
+                    onClick={() => setIsPinned(!isPinned)}
+                  ></path>
+                </svg>
               </div>
+              <textarea
+                className="h-100 text-xl"
+                placeholder="Take Note..."
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+              ></textarea>
+            </div>
+
+            <TagInputMobile
+              isOpen={isPopoverOpen}
+              setIsOpen={setIsPopoverOpen}
+              onSubmitTag={(newTag) =>
+                setTags((prev) => [
+                  ...prev,
+                  ...(Array.isArray(newTag) ? newTag.map(String) : [newTag]),
+                ])
+              }
+            />
+            <button
+              className="my-5 w-full rounded-md bg-[#6f61f2] p-2 text-white min-lg:hidden"
+              onClick={() => {
+                if (editingNoteId) {
+                  saveEditedNote();
+                } else {
+                  createNote();
+                }
+              }}
+            >
+              {editingNoteId ? "Save" : "Add Note"}
+            </button>
+          </div>
+        )}
+
+        <button
+          className="fixed right-5 bottom-5 z-40 h-16 w-16 rounded-full bg-[#6f61f2] text-4xl text-white shadow-lg min-lg:hidden"
+          onClick={() => {
+            setEditingNoteId(null); // new note mode
+            setTitle("");
+            setContent("");
+            setTags([]);
+            setIsPinned(false);
+            setIsFullScreenFormOpen(true);
+          }}
+        >
+          +
+        </button>
+      </div>
     </main>
   );
 }
