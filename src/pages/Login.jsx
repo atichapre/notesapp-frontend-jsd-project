@@ -14,11 +14,11 @@ export default function Login() {
 
   return (
     <main>
-      <div className="bg-greenBackground h-fit w-full">
+      <div className="h-fit w-full bg-black">
         <div className="container__div">
           <section className="flex min-h-screen w-full flex-col items-center justify-center gap-4 lg:flex-row">
             {/* Icon Section */}
-            <section className="text-text flex w-full flex-col items-center justify-center gap-4 lg:w-1/2">
+            <section className="flex w-full flex-col items-center justify-center gap-4 text-black lg:w-1/2">
               <img
                 src="/src/assets/logo_katsubook.png"
                 alt="Katsu Bookstore"
@@ -47,7 +47,7 @@ export default function Login() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="text-banner w-[65%] rounded-2xl bg-white px-4 py-2 md:w-[35%] lg:w-[50%]"
+                  className="text-banner w-[65%] rounded-2xl bg-black px-4 py-2 md:w-[35%] lg:w-[50%]"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -55,24 +55,23 @@ export default function Login() {
                 <input
                   type="password"
                   placeholder="Password"
-                  className="text-banner w-[65%] rounded-2xl bg-white px-4 py-2 md:w-[35%] lg:w-[50%]"
+                  className="text-banner w-[65%] rounded-2xl bg-black px-4 py-2 md:w-[35%] lg:w-[50%]"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
 
                 <a href="">Forget Your password?</a>
                 <div className="flex w-[65%] flex-col items-center justify-center gap-4 md:w-[35%] lg:w-[50%]">
-                  <Separator />
-                  <Button className="bg-buttonBrown w-full rounded-2xl px-4 py-2 font-semibold hover:cursor-pointer">
+                  <button className="bg-buttonBrown w-full rounded-2xl px-4 py-2 font-semibold hover:cursor-pointer">
                     Login
-                  </Button>
+                  </button>
                   <p>or</p>
 
                   {/* Register Button */}
                   <Link to="/register" className="w-full">
-                    <Button className="bg-buttonBlue w-full rounded-2xl px-4 py-2 font-semibold hover:cursor-pointer">
+                    <button className="bg-buttonBlue w-full rounded-2xl px-4 py-2 font-semibold hover:cursor-pointer">
                       New Account
-                    </Button>
+                    </button>
                   </Link>
                 </div>
               </form>

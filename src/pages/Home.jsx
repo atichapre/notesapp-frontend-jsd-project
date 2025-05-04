@@ -3,18 +3,33 @@ import { useEffect, useState } from "react";
 import PopoverInput from "../components/PopOverInput";
 import labelIcon from "../assets/label-outline.svg";
 import TagInputMobile from "../components/AddTagsMobile";
+import { useOutletContext } from "react-router-dom";
 
 export default function Home() {
   const [notes, setNotes] = useState([]);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
+  // const [title, setTitle] = useState("");
+  // const [content, setContent] = useState("");
+  // const [tags, setTags] = useState([]);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [isPinned, setIsPinned] = useState(false);
-  const [editingNoteId, setEditingNoteId] = useState(null);
-  const [isFullScreenFormOpen, setIsFullScreenFormOpen] = useState(false);
+  // const [isPinned, setIsPinned] = useState(false);
+  // const [editingNoteId, setEditingNoteId] = useState(null);
+  // const [isFullScreenFormOpen, setIsFullScreenFormOpen] = useState(false);
 
   const token = localStorage.getItem("token");
+  const {
+    editingNoteId,
+    setEditingNoteId,
+    title,
+    setTitle,
+    content,
+    setContent,
+    tags,
+    setTags,
+    isPinned,
+    setIsPinned,
+    isFullScreenFormOpen,
+    setIsFullScreenFormOpen,
+  } = useOutletContext();
 
   const getNotes = async () => {
     const token = localStorage.getItem("token");
@@ -212,6 +227,7 @@ export default function Home() {
                 Undo
               </button>
             ) : null}
+
             <div>
               {[...notes]
                 .sort((a, b) => (b.isPinned === true) - (a.isPinned === true))
@@ -229,7 +245,7 @@ export default function Home() {
                       >
                         <path
                           id="Union"
-                          className="text-blue-800"
+                          className="text-blue-800 hover:cursor-pointer"
                           fill={note.isPinned ? "currentColor" : "#d5d7de"}
                           fillRule="evenodd"
                           d="m23 9 -8 -8 -3 5 -9.00005 4 4.7929 4.7929 -6.5 6.5 1.41421 1.4142 6.5 -6.5L14 21l4 -9 5 -3Z"
@@ -244,10 +260,19 @@ export default function Home() {
                     </p>
                     <p className>{showNoteTags(note.tags)}</p>
                     <div className="flex justify-between">
-                      <button onClick={() => deleteNote(note._id)}>
-                        Delete
-                      </button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        onClick={() => deleteNote(note._id)}
+                        width="24px"
+                        fill="currentColor"
+                      >
+                        <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                      </svg>
+
                       <button
+                        className="hover:cursor-pointer"
                         onClick={() => {
                           handleEdit(note);
                           handleScrollToTop();
@@ -263,7 +288,29 @@ export default function Home() {
           {/* Note Form */}
           <div className="flex w-[75%] px-5">
             <div className="flex w-full flex-col sm:max-md:hidden">
-              <p className="my-5 text-2xl">{showNoteTags(tags, deleteTag)}</p>
+              <div className="my-5 flex justify-between">
+                <p className="text-2xl">{showNoteTags(tags, deleteTag)}</p>
+                {editingNoteId ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="40px"
+                    viewBox="0 -960 960 960"
+                    className="hover:cursor-pointer"
+                    onClick={() => {
+                      if (editingNoteId) deleteNote(editingNoteId);
+                      setEditingNoteId(null);
+                      setTitle("");
+                      setContent("");
+                      setTags([]);
+                      setIsPinned(false);
+                    }}
+                    width="40px"
+                    fill="currentColor"
+                  >
+                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                  </svg>
+                ) : null}
+              </div>
               <div className="flex justify-between">
                 <input
                   className="w-[95%] py-4 text-4xl"
@@ -283,7 +330,7 @@ export default function Home() {
                 >
                   <path
                     id="Union"
-                    className="text-blue-800"
+                    className="text-blue-800 hover:cursor-pointer"
                     fill={isPinned ? "currentColor" : "#d5d7de"}
                     fill-rule="evenodd"
                     d="m23 9 -8 -8 -3 5 -9.00005 4 4.7929 4.7929 -6.5 6.5 1.41421 1.4142 6.5 -6.5L14 21l4 -9 5 -3Z"
@@ -320,27 +367,27 @@ export default function Home() {
           />
         </div>
         {isFullScreenFormOpen && (
-          <div className="fixed inset-0 z-50 overflow-auto bg-white p-10 min-lg:hidden">
+          <div className="fixed inset-0 z-50 overflow-auto bg-white p-10 min-[768px]:hidden">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-2xl font-bold">
                 {editingNoteId ? "Edit Note" : "Add Note"}
               </h2>
               <button
-                className="text-xl text-red-500 min-lg:hidden"
+                className="text-xl text-red-500 min-[768px]:hidden"
                 onClick={() => setIsFullScreenFormOpen(false)}
               >
                 ✕
               </button>
             </div>
 
-            <div className="flex w-full flex-col lg:hidden">
+            <div className="flex w-full flex-col min-[768px]:hidden">
               <p className="mt-10 h-full text-2xl">
                 {showNoteTags(tags, deleteTag)}
               </p>
 
               <div className="flex justify-between">
                 <input
-                  className="w-[95%] py-4 text-4xl"
+                  className="w-[95%] py-4 text-2xl"
                   type="text"
                   value={title}
                   placeholder="Enter a title..."
@@ -352,8 +399,8 @@ export default function Home() {
                   fill="none"
                   viewBox="0 0 24 24"
                   id="Pin-1--Streamline-Sharp"
-                  height="40"
-                  width="40"
+                  height="30"
+                  width="30"
                 >
                   <path
                     id="Union"
@@ -393,6 +440,7 @@ export default function Home() {
                 } else {
                   createNote();
                 }
+                setIsFullScreenFormOpen(false);
               }}
             >
               {editingNoteId ? "Save" : "Add Note"}
@@ -401,9 +449,9 @@ export default function Home() {
         )}
 
         <button
-          className="fixed right-5 bottom-5 z-40 h-16 w-16 rounded-full bg-[#6f61f2] text-4xl text-white shadow-lg min-lg:hidden"
+          className="fixed right-5 bottom-6 z-40 h-10 w-10 rounded-full bg-[#6f61f2] pb-1 text-3xl text-white shadow-lg min-[768px]:hidden"
           onClick={() => {
-            setEditingNoteId(null); // new note mode
+            setEditingNoteId(null);
             setTitle("");
             setContent("");
             setTags([]);

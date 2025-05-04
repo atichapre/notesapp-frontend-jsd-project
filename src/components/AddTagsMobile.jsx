@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 function TagInputMobile({ onSubmitTag, setIsOpen }) {
-  const [setTags] = useState([]);
+  const [tags, setTags] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event) => {
@@ -9,7 +9,7 @@ function TagInputMobile({ onSubmitTag, setIsOpen }) {
   };
 
   return (
-    <div>
+    <div className="flex justify-between">
       <input
         type="text"
         value={inputValue}
@@ -18,14 +18,14 @@ function TagInputMobile({ onSubmitTag, setIsOpen }) {
       />
 
       <button
-        className="mt-2 rounded bg-blue-500 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700"
+        className="mt-2 rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-700"
         onClick={() => {
           if (inputValue.trim()) {
-            onSubmitTag(inputValue.trim()); // Pass trimmed input to parent
-            setTags((prev) => [...prev, inputValue.trim()]); // Add tag to local state
-            setInputValue(""); // Reset input field
+            onSubmitTag(inputValue.trim());
+            setTags((prev) => [...prev, inputValue.trim()]);
+            setInputValue("");
           }
-          setIsOpen(false); // Close popover
+          setIsOpen(false);
         }}
       >
         Add
