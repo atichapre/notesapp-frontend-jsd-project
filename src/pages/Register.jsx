@@ -29,7 +29,10 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3010/auth/register", formData);
+      await axios.post(
+        "https://notesapp-backend-jsd-project.onrender.com/auth/register",
+        formData,
+      );
       setFormData({ name: "", email: "", password: "" });
       setMessage("Registration successful! Redirecting to Login...");
       setTimeout(() => {
