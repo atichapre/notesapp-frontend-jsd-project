@@ -30,11 +30,14 @@ export default function Home() {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.get("http://localhost:3010/notes", {
-        headers: {
-          Authorization: "Bearer " + token,
+      const response = await axios.get(
+        "https://notesapp-backend-jsd-project.onrender.com/notes",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
         },
-      });
+      );
       console.log("Fetched notes:", response.data);
       setNotes(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
@@ -58,7 +61,7 @@ export default function Home() {
         tags,
       });
       await axios.post(
-        "http://localhost:3010/notes",
+        "https://notesapp-backend-jsd-project.onrender.com/notes",
         { title, content, isPinned, tags },
 
         {
@@ -82,11 +85,14 @@ export default function Home() {
 
   const deleteNote = async (id) => {
     try {
-      await axios.delete(`http://localhost:3010/notes/${id}`, {
-        headers: {
-          Authorization: "Bearer " + token,
+      await axios.delete(
+        `https://notesapp-backend-jsd-project.onrender.com/notes/${id}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
         },
-      });
+      );
       console.log(notes);
       await getNotes();
     } catch (error) {
@@ -114,7 +120,7 @@ export default function Home() {
         tags,
       });
       await axios.put(
-        `http://localhost:3010/notes/${editingNoteId}`,
+        `https://notesapp-backend-jsd-project.onrender.com/notes/${editingNoteId}`,
         { title, content, isPinned, tags },
         {
           headers: {
@@ -157,7 +163,7 @@ export default function Home() {
   const togglePinned = async (noteId, currentPinned) => {
     try {
       await axios.patch(
-        `http://localhost:3010/notes/${noteId}`,
+        `https://notesapp-backend-jsd-project.onrender.com/notes/${noteId}`,
         {
           isPinned: !currentPinned,
         },
