@@ -40,7 +40,7 @@ export function SearchFunction() {
   const getNoteResults = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3010/search?query=${searchTerm}`,
+        `https://notesapp-backend-jsd-project.onrender.com/search?query=${searchTerm}`,
         { headers: { Authorization: "Bearer " + token } },
       );
 

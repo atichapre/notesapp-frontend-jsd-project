@@ -17,7 +17,7 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3010/auth/login",
+        "https://notesapp-backend-jsd-project.onrender.com/auth/login",
         {
           email,
           password,
