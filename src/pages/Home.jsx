@@ -267,8 +267,9 @@ export default function Home() {
                       {limitContentLength(note.content)}
                     </p>
                     <p className>{showNoteTags(note.tags)}</p>
+
                     <p>
-                      {new Date(note.createdAt).toLocaleString("en-US", {
+                      {new Date(note.updatedAt).toLocaleString("en-US", {
                         weekday: "long",
                         year: "numeric",
                         month: "long",
