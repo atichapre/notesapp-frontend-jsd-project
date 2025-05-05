@@ -8,6 +8,7 @@ import axios from "axios";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const Navigate = useNavigate();
 
@@ -17,7 +18,7 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "https://notesapp-backend-jsd-project.onrender.com/auth/login",
+        "http://localhost:3010/auth/login",
         {
           email,
           password,
@@ -43,7 +44,11 @@ export default function Login() {
         setPassword("");
       }
     } catch (err) {
-      console.log(err);
+      if (err.response && err.response.status === 400) {
+        setError(true);
+      } else {
+        console.log(err);
+      }
     }
   };
 
@@ -76,7 +81,12 @@ export default function Login() {
             </section>
             <section className="flex w-full flex-col items-center justify-center gap-4 text-black lg:w-1/2">
               <h1 className="flex text-3xl font-bold">Login</h1>
-              {isLoggedIn && <p>Login Successful!</p>}
+              {isLoggedIn ? (
+                <p>Login Successfully!</p>
+              ) : (
+                error && <p>Invalid Email and Password</p>
+              )}
+
               {/* Sign In Form */}
               <form
                 action={handleLogin}
@@ -108,15 +118,12 @@ export default function Login() {
                   </button>
 
                   {/* Register Button */}
-                  <Link
-                    to="/register"
-                    className="w-full text-center text-xl font-semibold sm:max-md:text-lg"
-                  >
-                    <button className="w-full px-4 py-2 hover:cursor-pointer">
-                      No Account?
-                    </button>
-                    <p>Have a new one here!</p>
-                  </Link>
+                  <div className="w-full text-center text-xl font-semibold sm:max-md:text-lg">
+                    <p className="w-full px-4 py-2">No Account?</p>
+                    <Link to="/register" className="hover:underline">
+                      Have a new one here!
+                    </Link>
+                  </div>
                 </div>
               </form>
             </section>

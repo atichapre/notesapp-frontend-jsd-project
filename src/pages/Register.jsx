@@ -9,6 +9,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function Register() {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -27,12 +29,12 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await axios.post(
-        "https://notesapp-backend-jsd-project.onrender.com/auth/register",
-        formData,
-      );
-      setMessage("Registration successful!");
+      await axios.post("http://localhost:3010/auth/register", formData);
       setFormData({ name: "", email: "", password: "" });
+      setMessage("Registration successful! Redirecting to Login...");
+      setTimeout(() => {
+        navigate("/login");
+      }, 5000);
     } catch (err) {
       console.error(err);
       setMessage("Registration failed. Please try again.");
@@ -88,6 +90,7 @@ export default function Register() {
                   ),
                 }}
               />
+
               <button
                 type="submit"
                 className="mb-10 w-full rounded-2xl bg-[#6f61f2] px-4 py-2 text-xl font-semibold text-white hover:cursor-pointer"
@@ -98,7 +101,7 @@ export default function Register() {
             </form>
             <Link
               to="/login"
-              className="w-full rounded-2xl px-4 text-xl font-semibold hover:cursor-pointer"
+              className="w-full rounded-2xl px-4 text-xl font-semibold hover:cursor-pointer hover:underline"
             >
               Back to Login
             </Link>
