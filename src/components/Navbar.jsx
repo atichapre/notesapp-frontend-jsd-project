@@ -38,7 +38,7 @@ export default function Navbar() {
                     setSearchTerm(e.target.value);
                     setShowSearch(true);
                   }}
-                  className="w-full rounded-lg border p-2 pr-10" // note the right padding
+                  className="w-full rounded-lg border p-2 pr-10"
                 />
 
                 {/* X icon - shows when search is active */}

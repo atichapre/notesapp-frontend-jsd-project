@@ -102,12 +102,6 @@ export default function Home() {
     setIsPinned(note.isPinned);
     setIsFullScreenFormOpen(true);
   };
-  const handleScrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
 
   const saveEditedNote = async () => {
     if (!editingNoteId) return;
@@ -165,7 +159,7 @@ export default function Home() {
       await axios.patch(
         `http://localhost:3010/notes/${noteId}`,
         {
-          isPinned: !currentPinned, // Toggle the pinned status
+          isPinned: !currentPinned,
         },
         {
           headers: {
@@ -173,7 +167,7 @@ export default function Home() {
           },
         },
       );
-      // Refresh the note list after update
+
       await getNotes();
     } catch (error) {
       console.error(
@@ -181,6 +175,13 @@ export default function Home() {
         error.response?.data || error.message,
       );
     }
+  };
+
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const limitContentLength = (content) => {

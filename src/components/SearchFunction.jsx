@@ -49,14 +49,12 @@ export function SearchFunction() {
 
       if (Array.isArray(response.data.notes)) {
         setSearchResults(response.data.notes);
-      } else if (response.data.items && Array.isArray(response.data.items)) {
-        setSearchResults(response.data.items);
       } else {
         setSearchResults([]);
       }
     } catch (error) {
       console.error("Error fetching search results:", error);
-      setError("Failed to fetch search results. Please try again later.");
+      setError("Failed to fetch search results.");
       setSearchResults([]);
     }
   };
@@ -81,15 +79,11 @@ export function SearchFunction() {
       if (searchTerm) {
         await getNoteResults();
       } else {
-        setSearchResults([]); // Clear results when search term is empty
+        setSearchResults([]);
       }
     };
     fetchResults();
   }, [searchTerm]);
-
-  useEffect(() => {
-    console.log("Updated search results:", searchResults); // Debugging state updates
-  }, [searchResults]);
 
   return (
     <div className="container__div">
@@ -127,9 +121,9 @@ export function SearchFunction() {
                 className="hover:cursor-pointer"
                 onClick={() => {
                   handleEdit(note);
-                  handleScrollToTop();
                   setShowSearch(false);
                   setSearchTerm("");
+                  handleScrollToTop();
                 }}
               >
                 Edit

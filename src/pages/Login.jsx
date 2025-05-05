@@ -1,44 +1,72 @@
 import { Link } from "react-router-dom";
-
+import noteLogo from "../assets/note-only.png";
+import noteText from "../assets/note-text.png";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const Navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     console.log("Email:", email);
     console.log("Password:", password);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3010/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        setTimeout(() => {
+          Navigate("/");
+        }, 2000);
+        localStorage.setItem("token", response.data.token);
+        setIsLoggedIn(true);
+        setTimeout(() => {
+          setIsLoggedIn(false);
+        }, 2000);
+        setEmail("");
+        setPassword("");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <main>
-      <div className="h-fit w-full bg-black">
+      <div className="h-fit w-full bg-[#f5f4f3]">
         <div className="container__div">
-          <section className="flex min-h-screen w-full flex-col items-center justify-center gap-4 lg:flex-row">
+          <section className="flex min-h-screen w-full flex-col items-center justify-center gap-4">
             {/* Icon Section */}
-            <section className="flex w-full flex-col items-center justify-center gap-4 text-black lg:w-1/2">
+            <section className="flex w-full flex-col items-center justify-center gap-4 text-black">
+              <img src={noteLogo} alt="NotesApp Logo" className="w-[10%]" />
               <img
-                src="/src/assets/logo_katsubook.png"
-                alt="Katsu Bookstore"
-                className="hidden w-[50%] lg:flex"
+                src={noteText}
+                alt="NotesApp Text"
+                className="w-[30%] md:w-[15%]"
               />
-              <img
-                src="/src/assets/logo_katsubook_no-text.png"
-                alt="Katsu Bookstore"
-                className="flex w-[35%] md:w-[15%] lg:hidden"
-              />
-              <p className="hidden w-fit lg:flex">
-                Welcome to bookstore Everything in One place
+              <p className="w-fit text-xl">
+                Welcome to NotesApp! Your thoughts, plans, and ideas — all in
+                one place.
               </p>
             </section>
-            <section className="text-text flex w-full flex-col items-center justify-center gap-4 lg:w-1/2">
-              <h1 className="flex font-bold">Login</h1>
-              <p className="hidden md:flex lg:hidden">
-                Welcome to bookstore Everything in One place
-              </p>
-
+            <section className="flex w-full flex-col items-center justify-center gap-4 text-black lg:w-1/2">
+              <h1 className="flex text-3xl font-bold">Login</h1>
+              {isLoggedIn && <p>Login Successful!</p>}
               {/* Sign In Form */}
               <form
                 action={handleLogin}
@@ -47,7 +75,7 @@ export default function Login() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="text-banner w-[65%] rounded-2xl bg-black px-4 py-2 md:w-[35%] lg:w-[50%]"
+                  className="w-[65%] rounded-2xl bg-white px-4 py-2 text-xl text-black md:w-[35%] lg:w-[50%]"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -55,22 +83,24 @@ export default function Login() {
                 <input
                   type="password"
                   placeholder="Password"
-                  className="text-banner w-[65%] rounded-2xl bg-black px-4 py-2 md:w-[35%] lg:w-[50%]"
+                  className="w-[65%] rounded-2xl bg-white px-4 py-2 text-xl text-black md:w-[35%] lg:w-[50%]"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <a href="">Forget Your password?</a>
                 <div className="flex w-[65%] flex-col items-center justify-center gap-4 md:w-[35%] lg:w-[50%]">
-                  <button className="bg-buttonBrown w-full rounded-2xl px-4 py-2 font-semibold hover:cursor-pointer">
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    className="w-full rounded-2xl bg-[#6f61f2] px-4 py-2 text-xl font-semibold text-white hover:cursor-pointer"
+                  >
                     Login
                   </button>
-                  <p>or</p>
 
                   {/* Register Button */}
                   <Link to="/register" className="w-full">
-                    <button className="bg-buttonBlue w-full rounded-2xl px-4 py-2 font-semibold hover:cursor-pointer">
-                      New Account
+                    <button className="w-full rounded-2xl px-4 py-2 text-xl font-semibold hover:cursor-pointer">
+                      No Account? Have a new one here!
                     </button>
                   </Link>
                 </div>
