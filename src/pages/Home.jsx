@@ -118,7 +118,6 @@ export default function Home() {
         content,
         isPinned,
         tags,
-        Date: new Date(),
       });
       await axios.put(
         `https://notesapp-backend-jsd-project.onrender.com/notes/${editingNoteId}`,
@@ -160,15 +159,6 @@ export default function Home() {
         )}
       </span>
     ));
-
-  const noteDate = new Date(notes[0]?.createdAt).toLocaleString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 
   const togglePinned = async (noteId, currentPinned) => {
     try {
@@ -277,7 +267,16 @@ export default function Home() {
                       {limitContentLength(note.content)}
                     </p>
                     <p className>{showNoteTags(note.tags)}</p>
-                    <p>{noteDate}</p>
+                    <p>
+                      {new Date(note.createdAt).toLocaleString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
                     <div className="flex justify-between">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
