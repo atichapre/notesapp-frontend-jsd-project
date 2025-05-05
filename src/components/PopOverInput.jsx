@@ -1,19 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 export default function PopoverInput({ isOpen, setIsOpen, onSubmitTag }) {
   const [inputValue, setInputValue] = useState("");
   const popoverRef = useRef(null);
 
-  // Close popover if clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [setIsOpen]);
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -23,7 +13,7 @@ export default function PopoverInput({ isOpen, setIsOpen, onSubmitTag }) {
       {isOpen && (
         <div
           ref={popoverRef}
-          className="absoluteright-0 z-10 mt-2 flex w-64 flex-col rounded-lg border border-gray-300 bg-white p-4 shadow-lg"
+          className="relative top-10 right-0 z-10 mt-2 flex w-64 flex-col rounded-lg border border-gray-300 bg-white p-4 shadow-lg"
         >
           <label className="block text-sm font-medium text-gray-700">
             Add Tags
@@ -41,9 +31,9 @@ export default function PopoverInput({ isOpen, setIsOpen, onSubmitTag }) {
             onClick={() => {
               if (inputValue.trim()) {
                 onSubmitTag(inputValue.trim()); // Add trimmed input to tags
-                setInputValue([]); // Reset input field
+                setInputValue("");
+                setIsOpen(false);
               }
-              setIsOpen(false);
             }}
           >
             Add

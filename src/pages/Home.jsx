@@ -3,17 +3,12 @@ import { useEffect, useState } from "react";
 import PopoverInput from "../components/PopOverInput";
 import labelIcon from "../assets/label-outline.svg";
 import TagInputMobile from "../components/AddTagsMobile";
-import { useOutletContext } from "react-router-dom";
+import { useNoteContext } from "../../Context/noteContext";
 
 export default function Home() {
   const [notes, setNotes] = useState([]);
-  // const [title, setTitle] = useState("");
-  // const [content, setContent] = useState("");
-  // const [tags, setTags] = useState([]);
+
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  // const [isPinned, setIsPinned] = useState(false);
-  // const [editingNoteId, setEditingNoteId] = useState(null);
-  // const [isFullScreenFormOpen, setIsFullScreenFormOpen] = useState(false);
 
   const token = localStorage.getItem("token");
   const {
@@ -29,7 +24,7 @@ export default function Home() {
     setIsPinned,
     isFullScreenFormOpen,
     setIsFullScreenFormOpen,
-  } = useOutletContext();
+  } = useNoteContext();
 
   const getNotes = async () => {
     const token = localStorage.getItem("token");
@@ -205,10 +200,16 @@ export default function Home() {
             <button
               className="m-5 rounded-md bg-[#6f61f2] p-2 text-white sm:max-md:hidden"
               onClick={() => {
-                if (editingNoteId) {
-                  saveEditedNote();
+                if (!title.trim() || !content.trim()) {
+                  alert("Please fill title and content");
                 } else {
-                  createNote();
+                  if (editingNoteId) {
+                    saveEditedNote();
+                  } else {
+                    createNote();
+                  }
+
+                  setIsFullScreenFormOpen(false);
                 }
               }}
             >
@@ -242,6 +243,7 @@ export default function Home() {
                         id="Pin-1--Streamline-Sharp"
                         height="20"
                         width="20"
+                        onClick={() => togglePinned(note._id)}
                       >
                         <path
                           id="Union"
@@ -251,7 +253,6 @@ export default function Home() {
                           d="m23 9 -8 -8 -3 5 -9.00005 4 4.7929 4.7929 -6.5 6.5 1.41421 1.4142 6.5 -6.5L14 21l4 -9 5 -3Z"
                           clipRule="evenodd"
                           strokeWidth="1"
-                          onClick={() => togglePinned(note._id)}
                         ></path>
                       </svg>
                     </div>
@@ -435,12 +436,17 @@ export default function Home() {
             <button
               className="my-5 w-full rounded-md bg-[#6f61f2] p-2 text-white min-lg:hidden"
               onClick={() => {
-                if (editingNoteId) {
-                  saveEditedNote();
+                if (!title.trim() || !content.trim()) {
+                  alert("Please fill title and content");
                 } else {
-                  createNote();
+                  if (editingNoteId) {
+                    saveEditedNote();
+                  } else {
+                    createNote();
+                  }
+
+                  setIsFullScreenFormOpen(false);
                 }
-                setIsFullScreenFormOpen(false);
               }}
             >
               {editingNoteId ? "Save" : "Add Note"}

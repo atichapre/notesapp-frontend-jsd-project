@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNoteContext } from "../../Context/noteContext";
 
-export function SearchFunction({
-  searchTerm,
-  setEditingNoteId,
-  setTitle,
-  setContent,
-  setTags,
-  setIsPinned,
-  setIsFullScreenFormOpen,
-  setShowSearch,
-  setSearchTerm,
-}) {
+export function SearchFunction() {
   const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState(null);
+  const {
+    searchTerm,
+    setEditingNoteId,
+    setTitle,
+    setContent,
+    setTags,
+    setIsPinned,
+    setIsFullScreenFormOpen,
+    setShowSearch,
+    setSearchTerm,
+  } = useNoteContext();
 
   const token = localStorage.getItem("token");
 

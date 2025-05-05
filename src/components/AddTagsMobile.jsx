@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNoteContext } from "../../Context/noteContext";
 
-function TagInputMobile({ onSubmitTag, setIsOpen }) {
-  const [tags, setTags] = useState([]);
+function TagInputMobile() {
+  // const [tags, setTags] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const { onSubmitTag, setIsOpen } = useNoteContext();
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -22,7 +24,7 @@ function TagInputMobile({ onSubmitTag, setIsOpen }) {
         onClick={() => {
           if (inputValue.trim()) {
             onSubmitTag(inputValue.trim());
-            setTags((prev) => [...prev, inputValue.trim()]);
+            // setTags((prev) => [...prev, inputValue.trim()]);
             setInputValue("");
           }
           setIsOpen(false);

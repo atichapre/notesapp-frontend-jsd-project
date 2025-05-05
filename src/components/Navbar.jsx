@@ -1,20 +1,11 @@
 import { Link } from "react-router-dom";
-// import Hamburger from "./Hamburger";
-// import { useNavigate } from "react-router-dom";
-
+import { useNoteContext } from "../../Context/noteContext";
 import noteLogo from "../assets/note-only.png";
 import noteText from "../assets/note-text.png";
 import { useNavigate } from "react-router-dom";
 
-export default function Navbar({ searchTerm, setSearchTerm, setShowSearch }) {
-  // const handleKeyPress = (event) => {
-  //   if (event.key === "Enter") {
-  //     console.log("Submitted value:", inputValue);
-  //     // You can send the inputValue to a backend or process it
-  //     setInputValue(""); // Clear input after submitting
-  //   }
-  // };
-  // const [inputValue, setInputValue] = useState("");
+export default function Navbar() {
+  const { searchTerm, setSearchTerm, setShowSearch } = useNoteContext();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const handleLogout = () => {
