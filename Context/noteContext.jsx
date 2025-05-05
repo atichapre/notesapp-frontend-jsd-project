@@ -31,8 +31,6 @@ export const NoteProvider = ({ children }) => {
     }
   }, [showSearch]);
 
-
-
   return (
     <NoteContext.Provider
       value={{
@@ -55,7 +53,6 @@ export const NoteProvider = ({ children }) => {
         isOpen,
         setIsOpen,
         onSubmitTag,
-      
       }}
     >
       {children}
