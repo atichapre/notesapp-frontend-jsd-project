@@ -34,6 +34,7 @@ export default function Login() {
           Navigate("/");
         }, 2000);
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("email", response.data.email);
         setIsLoggedIn(true);
         setTimeout(() => {
           setIsLoggedIn(false);
@@ -53,16 +54,22 @@ export default function Login() {
           <section className="flex min-h-screen w-full flex-col items-center justify-center gap-4">
             {/* Icon Section */}
             <section className="flex w-full flex-col items-center justify-center gap-4 text-black">
-              <img src={noteLogo} alt="NotesApp Logo" className="w-[10%]" />
+              <img
+                src={noteLogo}
+                alt="NotesApp Logo"
+                className="w-[15%] sm:max-md:w-[50%]"
+              />
               <img
                 src={noteText}
                 alt="NotesApp Text"
-                className="w-[30%] md:w-[15%]"
+                className="w-[20%] sm:max-md:w-[50%]"
               />
-              <p className="w-fit text-xl">
-                Welcome to NotesApp! Your thoughts, plans, and ideas — all in
-                one place.
-              </p>
+              <div className="flex text-center text-xl sm:max-md:w-[80%] sm:max-md:text-lg">
+                <p>
+                  Welcome to NotesApp!
+                  <p> Your thoughts, plans, and ideas - all in one place.</p>
+                </p>
+              </div>
             </section>
             <section className="flex w-full flex-col items-center justify-center gap-4 text-black lg:w-1/2">
               <h1 className="flex text-3xl font-bold">Login</h1>
@@ -75,7 +82,7 @@ export default function Login() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-[65%] rounded-2xl bg-white px-4 py-2 text-xl text-black md:w-[35%] lg:w-[50%]"
+                  className="w-[65%] rounded-2xl bg-white px-4 py-2 text-xl text-black sm:max-md:text-base md:w-[35%] lg:w-[50%]"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -83,7 +90,7 @@ export default function Login() {
                 <input
                   type="password"
                   placeholder="Password"
-                  className="w-[65%] rounded-2xl bg-white px-4 py-2 text-xl text-black md:w-[35%] lg:w-[50%]"
+                  className="w-[65%] rounded-2xl bg-white px-4 py-2 text-xl text-black sm:max-md:text-lg md:w-[35%] lg:w-[50%]"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -98,10 +105,14 @@ export default function Login() {
                   </button>
 
                   {/* Register Button */}
-                  <Link to="/register" className="w-full">
-                    <button className="w-full rounded-2xl px-4 py-2 text-xl font-semibold hover:cursor-pointer">
-                      No Account? Have a new one here!
+                  <Link
+                    to="/register"
+                    className="w-full text-center text-xl font-semibold sm:max-md:text-lg"
+                  >
+                    <button className="w-full px-4 py-2 hover:cursor-pointer">
+                      No Account?
                     </button>
+                    <p>Have a new one here!</p>
                   </Link>
                 </div>
               </form>
