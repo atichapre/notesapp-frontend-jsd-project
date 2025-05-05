@@ -40,7 +40,7 @@ export default function ProfileUserPopover() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <div className="min-w-[160px] p-4">
-          <Typography variant="body1"> {userEmail} </Typography>
+          <p> {userEmail} </p>
           <Typography
             variant="body1"
             sx={{ mt: 1, cursor: "pointer", color: "red" }}

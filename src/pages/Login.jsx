@@ -67,7 +67,10 @@ export default function Login() {
               <div className="flex text-center text-xl sm:max-md:w-[80%] sm:max-md:text-lg">
                 <p>
                   Welcome to NotesApp!
-                  <p> Your thoughts, plans, and ideas - all in one place.</p>
+                  <span>
+                    {" "}
+                    Your thoughts, plans, and ideas - all in one place.
+                  </span>
                 </p>
               </div>
             </section>
@@ -82,7 +85,7 @@ export default function Login() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-[65%] rounded-2xl bg-white px-4 py-2 text-xl text-black sm:max-md:text-base md:w-[35%] lg:w-[50%]"
+                  className="w-[80%] rounded-2xl bg-white px-4 py-2 text-xl text-black sm:max-md:text-base md:w-[35%] lg:w-[50%]"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -90,7 +93,7 @@ export default function Login() {
                 <input
                   type="password"
                   placeholder="Password"
-                  className="w-[65%] rounded-2xl bg-white px-4 py-2 text-xl text-black sm:max-md:text-lg md:w-[35%] lg:w-[50%]"
+                  className="w-[80%] rounded-2xl bg-white px-4 py-2 text-xl text-black sm:max-md:text-lg md:w-[35%] lg:w-[50%]"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
