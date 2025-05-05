@@ -30,14 +30,11 @@ export default function Home() {
     const token = localStorage.getItem("token");
     if (!token) return;
     try {
-      const response = await axios.get(
-        "https://notesapp-backend-jsd-project.onrender.com/notes",
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
+      const response = await axios.get("http://localhost:3010/notes", {
+        headers: {
+          Authorization: "Bearer " + token,
         },
-      );
+      });
       console.log("Fetched notes:", response.data);
       setNotes(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
@@ -61,7 +58,7 @@ export default function Home() {
         tags,
       });
       await axios.post(
-        "https://notesapp-backend-jsd-project.onrender.com/notes",
+        "http://localhost:3010/notes",
         { title, content, isPinned, tags },
 
         {
@@ -85,14 +82,11 @@ export default function Home() {
 
   const deleteNote = async (id) => {
     try {
-      await axios.delete(
-        `https://notesapp-backend-jsd-project.onrender.com/notes/${id}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
+      await axios.delete(`http://localhost:3010/notes/${id}`, {
+        headers: {
+          Authorization: "Bearer " + token,
         },
-      );
+      });
       console.log(notes);
       await getNotes();
     } catch (error) {
@@ -118,9 +112,10 @@ export default function Home() {
         content,
         isPinned,
         tags,
+        Date: new Date(),
       });
       await axios.put(
-        `https://notesapp-backend-jsd-project.onrender.com/notes/${editingNoteId}`,
+        `http://localhost:3010/notes/${editingNoteId}`,
         { title, content, isPinned, tags },
         {
           headers: {
@@ -160,10 +155,19 @@ export default function Home() {
       </span>
     ));
 
+  const noteDate = new Date(notes[0]?.createdAt).toLocaleString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   const togglePinned = async (noteId, currentPinned) => {
     try {
       await axios.patch(
-        `https://notesapp-backend-jsd-project.onrender.com/notes/${noteId}`,
+        `http://localhost:3010/notes/${noteId}`,
         {
           isPinned: !currentPinned,
         },
@@ -267,6 +271,7 @@ export default function Home() {
                       {limitContentLength(note.content)}
                     </p>
                     <p className>{showNoteTags(note.tags)}</p>
+                    <p>{noteDate}</p>
                     <div className="flex justify-between">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
