@@ -31,7 +31,7 @@ export const TokenExpiredNotification = () => {
 
   return (
     <div>
-      <p>{message}</p>
+      <p className="text-3xl text-red-500">{message}</p>
     </div>
   );
 };
