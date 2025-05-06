@@ -4,6 +4,7 @@ import noteText from "../assets/note-text.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useMessage } from "../../Context/messageContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export default function Login() {
   const [error, setError] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const Navigate = useNavigate();
+  const { message, setMessage } = useMessage();
 
   const handleLogin = async () => {
     console.log("Email:", email);
@@ -18,16 +20,9 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3010/auth/login",
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
+        "https://notesapp-backend-jsd-project.onrender.com/auth/login",
+        { email, password },
+        { headers: { "Content-Type": "application/json" } },
       );
 
       if (response.status === 200) {
@@ -46,12 +41,13 @@ export default function Login() {
     } catch (err) {
       if (err.response && err.response.status === 400) {
         setError(true);
+        console.log(err.response.data.message);
       } else {
+        setMessage("Something went wrong. Please try again.");
         console.log(err);
       }
     }
   };
-
   return (
     <main>
       <div className="h-fit w-full bg-[#f5f4f3]">
@@ -86,7 +82,7 @@ export default function Login() {
               ) : (
                 error && <p>Invalid Email and Password</p>
               )}
-
+              <p>{message}</p>
               {/* Sign In Form */}
               <form
                 action={handleLogin}
