@@ -1,16 +1,16 @@
-import * as React from "react";
 import { Popover, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function ProfileUserPopover() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchor, setAnchor] = useState(null);
 
-  const handleClick = (event) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
+  const handleClick = (event) => setAnchor(event.currentTarget);
+  const handleClose = () => setAnchor(null);
   const userEmail = localStorage.getItem("email");
 
   const navigate = useNavigate();
-  const open = Boolean(anchorEl);
+  const open = Boolean(anchor);
   const id = open ? "simple-popover" : undefined;
 
   const handleLogout = () => {
@@ -35,7 +35,7 @@ export default function ProfileUserPopover() {
       <Popover
         id={id}
         open={open}
-        anchorEl={anchorEl}
+        anchorEl={anchor}
         onClose={handleClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
