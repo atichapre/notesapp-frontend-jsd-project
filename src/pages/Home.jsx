@@ -4,6 +4,7 @@ import PopoverInput from "../components/PopOverInput";
 import labelIcon from "../assets/label-outline.svg";
 import TagInputMobile from "../components/AddTagsMobile";
 import { useNoteContext } from "../../Context/noteContext";
+import { TokenExpiredNotification } from "../../Context/tokenExpiredNotification";
 
 export default function Home() {
   const [notes, setNotes] = useState([]);
@@ -201,6 +202,7 @@ export default function Home() {
   return (
     <main>
       <div className="container__div">
+        <TokenExpiredNotification />
         <div className="flex flex-row sm:max-md:flex-col">
           {/* Note Sidebar */}
           <div className="flex w-[25%] flex-col sm:max-md:w-full">
