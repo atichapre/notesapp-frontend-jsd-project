@@ -39,7 +39,7 @@ export default function Home() {
           },
         },
       );
-      console.log("Fetched notes:", response.data);
+
       setNotes(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error(
@@ -55,23 +55,21 @@ export default function Home() {
 
   const createNote = async () => {
     try {
-      console.log("Creating note with:", {
-        title,
+      title,
         content,
         isPinned,
         tags,
-      });
-      await axios.post(
-        "https://notesapp-backend-jsd-project.onrender.com/notes",
-        { title, content, isPinned, tags },
+        await axios.post(
+          "https://notesapp-backend-jsd-project.onrender.com/notes",
+          { title, content, isPinned, tags },
 
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
           },
-        },
-      );
+        );
 
       setTitle("");
       setContent("");
@@ -94,7 +92,7 @@ export default function Home() {
           },
         },
       );
-      console.log(notes);
+
       await getNotes();
     } catch (error) {
       console.log(error);
@@ -114,22 +112,20 @@ export default function Home() {
     if (!editingNoteId) return;
 
     try {
-      console.log("Saving edited note with:", {
-        title,
+      title,
         content,
         isPinned,
         tags,
-      });
-      await axios.put(
-        `https://notesapp-backend-jsd-project.onrender.com/notes/${editingNoteId}`,
-        { title, content, isPinned, tags },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
+        await axios.put(
+          `https://notesapp-backend-jsd-project.onrender.com/notes/${editingNoteId}`,
+          { title, content, isPinned, tags },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
           },
-        },
-      );
+        );
       setEditingNoteId(null);
       setTitle("");
       setTags([]);

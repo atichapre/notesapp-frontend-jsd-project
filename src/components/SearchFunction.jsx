@@ -44,9 +44,6 @@ export function SearchFunction() {
         { headers: { Authorization: "Bearer " + token } },
       );
 
-      console.log("Full response:", response);
-      console.log("Response data:", response.data);
-
       if (Array.isArray(response.data.notes)) {
         setSearchResults(response.data.notes);
       } else {

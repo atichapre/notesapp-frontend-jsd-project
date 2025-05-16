@@ -23,7 +23,7 @@ export const TokenExpiredNotification = () => {
               navigate("/login");
             }, 3000);
           } else {
-            console.log("Authentication failed: " + err.response.data.message);
+            console.err("Authentication failed: " + err.response.data.message);
           }
         }
       });

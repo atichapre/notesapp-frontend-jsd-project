@@ -15,9 +15,6 @@ export default function Login() {
   const { message, setMessage } = useMessage();
 
   const handleLogin = async () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
-
     try {
       const response = await axios.post(
         "https://notesapp-backend-jsd-project.onrender.com/auth/login",
